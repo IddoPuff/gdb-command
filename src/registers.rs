@@ -22,10 +22,9 @@ impl RegistersExt for Registers {
         for mut e in splited {
             if let Some(reg) = e.next() {
                 if let Some(value) = e.next() {
-                    regs.insert(
-                        reg.to_string(),
-                        u64::from_str_radix(value.get(2..).unwrap_or(""), 16)?,
-                    );
+                    if let Ok(parsed) = u64::from_str_radix(value.get(2..).unwrap_or(""), 16) {
+                        regs.insert(reg.to_string(), parsed);
+                    }
                 }
             }
         }
