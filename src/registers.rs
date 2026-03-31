@@ -22,8 +22,12 @@ impl RegistersExt for Registers {
         for mut e in splited {
             if let Some(reg) = e.next() {
                 if let Some(value) = e.next() {
-                    if let Ok(parsed) = u64::from_str_radix(value.get(2..).unwrap_or(""), 16) {
-                        regs.insert(reg.to_string(), parsed);
+                    if value == "<unavailable>" {
+                        continue;
+                    }
+                    match u64::from_str_radix(value.get(2..).unwrap_or(""), 16) {
+                        Ok(parsed) => { regs.insert(reg.to_string(), parsed); }
+                        Err(e) => eprintln!("Failed to parse register {reg} value {value}: {e}"),
                     }
                 }
             }
